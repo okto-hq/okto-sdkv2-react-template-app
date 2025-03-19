@@ -4,6 +4,7 @@ import { Address, getChains, getOrdersHistory, getPortfolioNFT, nftTransfer, use
 import { useNavigate } from "react-router-dom";
 import { nftTransfer as nftTransferUserOp } from "@okto_web3/react-sdk/userop";
 import { nftTransfer as nftTransferMain } from "@okto_web3/react-sdk";
+import CopyButton from "../components/CopyButton";
 
 // Modal Component
 interface ModalProps {
@@ -19,7 +20,9 @@ const Modal = ({ isOpen, onClose, title, children }: ModalProps) =>
       <div className="bg-gray-800 rounded-lg p-6 w-full max-w-xl">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-bold text-white">{title}</h2>
-          <button onClick={onClose} className="text-gray-400 hover:text-white">✕</button>
+          <button onClick={onClose} className="text-gray-400 hover:text-white">
+            ✕
+          </button>
         </div>
         <div className="max-h-[70vh] overflow-y-auto">{children}</div>
       </div>
@@ -27,8 +30,17 @@ const Modal = ({ isOpen, onClose, title, children }: ModalProps) =>
   );
 
 const RefreshIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-    stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="16"
+    height="16"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
     <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38" />
   </svg>
 );
@@ -48,7 +60,8 @@ function TransferNFT() {
   const [selectedNFT, setSelectedNFT] = useState<string>("");
   const [collectionAddress, setCollectionAddress] = useState<string>("");
   const [nftId, setNftId] = useState<string>("");
-  const [recipientWalletAddress, setRecipientWalletAddress] = useState<string>("");
+  const [recipientWalletAddress, setRecipientWalletAddress] =
+    useState<string>("");
   const [amount, setAmount] = useState<string>("1");
   const [type, setType] = useState<string>("ERC721");
   const [balance, setBalance] = useState<string>("");
@@ -120,17 +133,17 @@ function TransferNFT() {
       try {
         const response = await getPortfolioNFT(oktoClient);
 
-        const processedNfts = response.map(nft => ({
+        const processedNfts = response.map((nft) => ({
           address: nft.collectionAddress,
           nft_id: nft.nftId,
           nft_type: nft.entityType,
           caipId: nft.caipId,
           name: nft.nftName,
           image: nft.image,
-          quantity: nft.quantity
+          quantity: nft.quantity,
         }));
-        const filteredNfts = processedNfts.filter(nft =>
-          nft.caipId === selectedChain
+        const filteredNfts = processedNfts.filter(
+          (nft) => nft.caipId === selectedChain
         );
 
         setPortfolio(filteredNfts);
@@ -148,14 +161,20 @@ function TransferNFT() {
 
   // Validation function
   const validateFormData = (): {
-    caip2Id: string,
-    collectionAddress: Address,
-    nftId: string,
-    recipientWalletAddress: Address,
-    amount: number,
-    nftType: "ERC721" | "ERC1155"
+    caip2Id: string;
+    collectionAddress: Address;
+    nftId: string;
+    recipientWalletAddress: Address;
+    amount: number;
+    nftType: "ERC721" | "ERC1155";
   } => {
-    if (!selectedChain || !collectionAddress || !nftId || !recipientWalletAddress || !amount) {
+    if (
+      !selectedChain ||
+      !collectionAddress ||
+      !nftId ||
+      !recipientWalletAddress ||
+      !amount
+    ) {
       throw new Error("Please fill in all required fields");
     }
 
@@ -165,7 +184,7 @@ function TransferNFT() {
       nftId,
       recipientWalletAddress: recipientWalletAddress as Address,
       amount: Number(amount),
-      nftType: type as "ERC721" | "ERC1155"
+      nftType: type as "ERC721" | "ERC1155",
     };
   };
 
@@ -185,15 +204,15 @@ function TransferNFT() {
         intentType: "NFT_TRANSFER",
       });
       setOrderHistory(orders?.[0]);
-      console.log('Refreshed Order History:', orders);
+      console.log("Refreshed Order History:", orders);
       setActiveModal("orderHistory");
     } catch (error: any) {
-      console.error('Error in fetching order history', error);
+      console.error("Error in fetching order history", error);
       setError(`Error fetching transaction details: ${error.message}`);
     } finally {
       setIsLoading(false);
     }
-  }
+  };
 
   const refreshOrderHistory = async () => {
     if (!jobId) {
@@ -209,7 +228,7 @@ function TransferNFT() {
       });
       setOrderHistory(orders?.[0]);
     } catch (error: any) {
-      console.error('Error refreshing order history', error);
+      console.error("Error refreshing order history", error);
       setError(`Error refreshing transaction details: ${error.message}`);
     } finally {
       setIsRefreshing(false);
@@ -228,7 +247,7 @@ function TransferNFT() {
       await handleGetOrderHistory(jobId);
       showModal("jobId");
     } catch (error: any) {
-      console.error('Error in NFT transfer:', error);
+      console.error("Error in NFT transfer:", error);
       setError(`Error in NFT transfer: ${error.message}`);
     } finally {
       setIsLoading(false);
@@ -244,9 +263,9 @@ function TransferNFT() {
       const userOp = await nftTransferUserOp(oktoClient, transferParams);
       setUserOp(userOp);
       showModal("unsignedOp");
-      console.log('UserOp:', userOp);
+      console.log("UserOp:", userOp);
     } catch (error: any) {
-      console.error('Error in creating user operation:', error);
+      console.error("Error in creating user operation:", error);
       setError(`Error in creating user operation: ${error.message}`);
     } finally {
       setIsLoading(false);
@@ -266,9 +285,9 @@ function TransferNFT() {
       const signedOp = await oktoClient.signUserOp(userOp);
       setSignedUserOp(signedOp);
       showModal("signedOp");
-      console.log('Signed UserOp', signedOp);
+      console.log("Signed UserOp", signedOp);
     } catch (error: any) {
-      console.error('Error in signing the userop:', error);
+      console.error("Error in signing the userop:", error);
       setError(`Error in signing transaction: ${error.message}`);
     } finally {
       setIsLoading(false);
@@ -289,9 +308,9 @@ function TransferNFT() {
       setJobId(jobId);
       await handleGetOrderHistory(jobId);
       showModal("jobId");
-      console.log('Job Id', jobId);
+      console.log("Job Id", jobId);
     } catch (error: any) {
-      console.error('Error in executing the userop:', error);
+      console.error("Error in executing the userop:", error);
       setError(`Error in executing transaction: ${error.message}`);
     } finally {
       setIsLoading(false);
@@ -312,7 +331,7 @@ function TransferNFT() {
       setCollectionAddress(selectedNft.address);
       setNftId(selectedNft.nft_id);
       setType(selectedNft.nft_type || "ERC721");
-      setBalance((parseFloat(selectedNft.quantity).toFixed(2)));
+      setBalance(parseFloat(selectedNft.quantity).toFixed(2));
     } else {
       setBalance("");
     }
@@ -331,14 +350,8 @@ function TransferNFT() {
           <p>Your NFT transfer has been submitted successfully.</p>
           <div className="bg-gray-700 p-3 rounded">
             <p className="text-sm text-gray-300 mb-1">Job ID:</p>
-            <p className="font-mono break-all">{jobId}
-              <button
-                className="bg-gray-200 text-black px-2 hover:bg-indigo-300 mx-2"
-                onClick={() => copyToClipboard(jobId || '')}
-              >
-                Copy
-              </button>
-            </p>
+            <CopyButton text={jobId ?? ""} />
+            <p className="font-mono break-all">{jobId}</p>
           </div>
           <div className="flex justify-center pt-2">
             <button
@@ -363,24 +376,34 @@ function TransferNFT() {
           <div className="bg-gray-700 p-3 rounded">
             <p className="text-sm text-gray-300 mb-1">Transaction Details:</p>
             <div className="bg-gray-900 p-2 rounded font-mono text-sm overflow-auto max-h-40">
-              <button
-                className="bg-gray-200 text-black px-2 hover:bg-indigo-300"
-                onClick={() => copyToClipboard(JSON.stringify(userOp, null, 2))}
-              >
-                Copy
-              </button>
+              <CopyButton text={JSON.stringify(userOp, null, 2) ?? ""} />
               <pre>{JSON.stringify(userOp, null, 2)}</pre>
             </div>
           </div>
           <div className="bg-gray-700 p-3 rounded">
             <p className="text-sm text-gray-300 mb-1">Summary:</p>
             <ul className="space-y-1">
-              <li><span className="text-gray-400">NFT:</span> {selectedNFT}</li>
-              <li><span className="text-gray-400">Collection Address:</span> {collectionAddress}</li>
-              <li><span className="text-gray-400">NFT ID:</span> {nftId}</li>
-              <li><span className="text-gray-400">Amount:</span> {amount}</li>
-              <li><span className="text-gray-400">Recipient:</span> {recipientWalletAddress}</li>
-              <li><span className="text-gray-400">Network:</span> {chains.find(c => c.caipId === selectedChain)?.networkName}</li>
+              <li>
+                <span className="text-gray-400">NFT:</span> {selectedNFT}
+              </li>
+              <li>
+                <span className="text-gray-400">Collection Address:</span>{" "}
+                {collectionAddress}
+              </li>
+              <li>
+                <span className="text-gray-400">NFT ID:</span> {nftId}
+              </li>
+              <li>
+                <span className="text-gray-400">Amount:</span> {amount}
+              </li>
+              <li>
+                <span className="text-gray-400">Recipient:</span>{" "}
+                {recipientWalletAddress}
+              </li>
+              <li>
+                <span className="text-gray-400">Network:</span>{" "}
+                {chains.find((c) => c.caipId === selectedChain)?.networkName}
+              </li>
             </ul>
           </div>
           <div className="flex justify-center pt-2">
@@ -402,16 +425,14 @@ function TransferNFT() {
         title="Sign Completed"
       >
         <div className="space-y-4 text-white">
-          <p>Your NFT transfer has been signed successfully and is ready to be executed.</p>
+          <p>
+            Your NFT transfer has been signed successfully and is ready to be
+            executed.
+          </p>
           <div className="bg-gray-700 p-3 rounded">
             <p className="text-sm text-gray-300 mb-1">Signed Transaction:</p>
             <div className="bg-gray-900 p-2 rounded font-mono text-sm overflow-auto max-h-40">
-              <button
-                className="bg-gray-200 text-black px-2 hover:bg-indigo-300"
-                onClick={() => copyToClipboard(JSON.stringify(signedUserOp, null, 2))}
-              >
-                Copy
-              </button>
+              <CopyButton text={JSON.stringify(signedUserOp, null, 2) ?? ""} />
               <pre>{JSON.stringify(signedUserOp, null, 2)}</pre>
             </div>
           </div>
@@ -441,19 +462,35 @@ function TransferNFT() {
               className="flex items-center gap-1 text-blue-400 hover:text-blue-300 px-2 py-1 rounded bg-blue-900/30 hover:bg-blue-900/50 transition-colors"
               disabled={isRefreshing}
             >
-              {isRefreshing ? <span>Refreshing...</span> : (<><RefreshIcon /> Refresh</>)}
+              {isRefreshing ? (
+                <span>Refreshing...</span>
+              ) : (
+                <>
+                  <RefreshIcon /> Refresh
+                </>
+              )}
             </button>
           </div>
 
           {/* Order History Details */}
           {orderHistory ? (
             <div className="bg-gray-700 p-4 rounded-md">
-              <p><span className="font-semibold">Intent ID:</span> {orderHistory.intentId}</p>
-              <p><span className="font-semibold">Status:</span> {orderHistory.status}</p>
-              <p><span className="font-semibold">Transaction Hash:</span></p>
+              <p>
+                <span className="font-semibold">Intent ID:</span>{" "}
+                {orderHistory.intentId}
+              </p>
+              <p>
+                <span className="font-semibold">Status:</span>{" "}
+                {orderHistory.status}
+              </p>
+              <p>
+                <span className="font-semibold">Transaction Hash:</span>
+              </p>
               <pre className="break-all whitespace-pre-wrap overflow-auto bg-gray-800 p-2 rounded-md text-sm max-w-full">
-                <button className="bg-gray-200 text-black px-2 hover:bg-indigo-300" onClick={() => copyToClipboard(JSON.stringify(orderHistory.transactionHash[1]))}>Copy</button>
-                {orderHistory.transactionHash[1]}
+                <CopyButton
+                  text={orderHistory.downstreamTransactionHash[0] ?? ""}
+                />
+                {orderHistory.downstreamTransactionHash[0]}
               </pre>
             </div>
           ) : (
@@ -462,16 +499,38 @@ function TransferNFT() {
 
           {/* View in Explorer (if URL exists) */}
           {orderHistory && (
-            <div className="flex justify-center pt-2">
-              <a
-                href={`https://etherscan.io/tx/${orderHistory.transactionHash[0]}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-3 bg-blue-600 hover:bg-blue-700 text-white rounded transition-colors w-full text-center"
-              >
-                View in Explorer
-              </a>
-            </div>
+            <>
+              {orderHistory.status === "SUCCESSFUL" ? (
+                <div className="flex justify-center pt-2">
+                  {orderHistory.downstreamTransactionHash?.[0] && (
+                    <a
+                      href={`https://sepolia.basescan.org/tx/${orderHistory.downstreamTransactionHash[0]}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="p-3 bg-blue-600 hover:bg-blue-700 text-white rounded transition-colors w-full text-center"
+                    >
+                      View in Explorer
+                    </a>
+                  )}
+                </div>
+              ) : (
+                <div className="flex justify-center pt-2">
+                  <button
+                    onClick={refreshOrderHistory}
+                    className="flex gap-x-3 justify-center items-center p-3 bg-blue-600 hover:bg-blue-700 text-white rounded transition-colors w-full text-center"
+                    disabled={isRefreshing}
+                  >
+                    {isRefreshing ? (
+                      <span>Refreshing...</span>
+                    ) : (
+                      <>
+                        <RefreshIcon /> Refresh
+                      </>
+                    )}
+                  </button>
+                </div>
+              )}
+            </>
           )}
 
           {/* Reset Form Button */}
@@ -511,7 +570,9 @@ function TransferNFT() {
         <div className="flex flex-col items-center bg-black p-6 rounded-lg shadow-xl border border-gray-800">
           {/* Network Selection */}
           <div className="w-full mb-4">
-            <label className="block text-sm font-medium text-gray-300 mb-1">Select Network</label>
+            <label className="block text-sm font-medium text-gray-300 mb-1">
+              Select Network
+            </label>
             <select
               className="w-full p-3 bg-gray-800 border border-gray-700 rounded text-white"
               value={selectedChain}
@@ -539,7 +600,9 @@ function TransferNFT() {
           {/* NFT Selection */}
           {selectedChain && (
             <div className="w-full mb-4">
-              <label className="block text-sm font-medium text-gray-300 mb-1">Select NFT</label>
+              <label className="block text-sm font-medium text-gray-300 mb-1">
+                Select NFT
+              </label>
               <select
                 className="w-full p-3 bg-gray-800 border border-gray-700 rounded text-white"
                 value={selectedNFT}
@@ -547,20 +610,24 @@ function TransferNFT() {
                 disabled={loadingNfts}
               >
                 <option value="" disabled>
-                  {loadingNfts ? "Loading NFTs..." : "Select an NFT or enter details manually"}
+                  {loadingNfts
+                    ? "Loading NFTs..."
+                    : "Select an NFT or enter details manually"}
                 </option>
                 {portfolio.map((nft) => (
                   <option
                     key={`${nft.address}-${nft.nft_id}`}
                     value={`${nft.address}-${nft.nft_id}`}
                   >
-                    {nft.name || `NFT #${nft.nft_id}`} ({nft.nft_type || "ERC721"})
+                    {nft.name || `NFT #${nft.nft_id}`} (
+                    {nft.nft_type || "ERC721"})
                   </option>
                 ))}
               </select>
               {portfolio.length === 0 && !loadingNfts && selectedChain && (
                 <p className="text-yellow-400 text-sm mt-1">
-                  No NFTs found for this network. You can enter details manually below.
+                  No NFTs found for this network. You can enter details manually
+                  below.
                 </p>
               )}
             </div>
@@ -568,7 +635,9 @@ function TransferNFT() {
 
           {/* Collection Address */}
           <div className="w-full mb-4">
-            <label className="block text-sm font-medium text-gray-300 mb-1">Collection Address</label>
+            <label className="block text-sm font-medium text-gray-300 mb-1">
+              Collection Address
+            </label>
             <input
               className="w-full p-3 bg-gray-800 border border-gray-700 rounded text-white placeholder-gray-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
               value={collectionAddress}
@@ -579,7 +648,9 @@ function TransferNFT() {
 
           {/* NFT ID */}
           <div className="w-full mb-4">
-            <label className="block text-sm font-medium text-gray-300 mb-1">NFT ID</label>
+            <label className="block text-sm font-medium text-gray-300 mb-1">
+              NFT ID
+            </label>
             <input
               className="w-full p-3 bg-gray-800 border border-gray-700 rounded text-white placeholder-gray-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
               value={nftId}
@@ -590,7 +661,9 @@ function TransferNFT() {
 
           {/* Recipient Wallet Address */}
           <div className="w-full mb-4">
-            <label className="block text-sm font-medium text-gray-300 mb-1">Recipient Wallet Address</label>
+            <label className="block text-sm font-medium text-gray-300 mb-1">
+              Recipient Wallet Address
+            </label>
             <input
               className="w-full p-3 bg-gray-800 border border-gray-700 rounded text-white placeholder-gray-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
               value={recipientWalletAddress}
@@ -617,7 +690,9 @@ function TransferNFT() {
 
           {/* NFT Type */}
           <div className="w-full mb-4">
-            <label className="block text-sm font-medium text-gray-300 mb-1">NFT Type</label>
+            <label className="block text-sm font-medium text-gray-300 mb-1">
+              NFT Type
+            </label>
             <select
               className="w-full p-3 bg-gray-800 border border-gray-700 rounded text-white"
               value={type}
@@ -633,14 +708,26 @@ function TransferNFT() {
             <button
               className="w-full p-3 bg-blue-600 hover:bg-blue-700 text-white rounded transition-colors disabled:bg-blue-800 disabled:opacity-50"
               onClick={handleTransferNft}
-              disabled={isLoading || !selectedChain || !selectedNFT || !amount || !recipientWalletAddress}
+              disabled={
+                isLoading ||
+                !selectedChain ||
+                !selectedNFT ||
+                !amount ||
+                !recipientWalletAddress
+              }
             >
               Transfer NFT (Direct)
             </button>
             <button
               className="w-full p-3 bg-blue-600 hover:bg-blue-700 text-white rounded transition-colors disabled:bg-blue-800 disabled:opacity-50"
               onClick={handleNftTransferUserOp}
-              disabled={isLoading || !selectedChain || !selectedNFT || !amount || !recipientWalletAddress}
+              disabled={
+                isLoading ||
+                !selectedChain ||
+                !selectedNFT ||
+                !amount ||
+                !recipientWalletAddress
+              }
             >
               Create NFT Transfer UserOp
             </button>

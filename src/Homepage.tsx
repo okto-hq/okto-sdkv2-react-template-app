@@ -56,7 +56,9 @@ export default function Homepage() {
         <div className="space-y-4">
           <h2 className="text-violet-900 font-bold text-2xl">User Details</h2>
           <pre className="whitespace-pre-wrap break-words bg-white p-6 rounded-xl text-gray-800 w-full border border-violet-200 shadow-lg">
-            {isloggedIn ? `Logged in \n userSWA: ${userSWA} \n clientSWA: ${clientSWA}` : "not signed in"}
+            {isloggedIn
+              ? `Logged in \n userSWA: ${userSWA} \n clientSWA: ${clientSWA}`
+              : "not signed in"}
           </pre>
         </div>
 
@@ -65,8 +67,12 @@ export default function Homepage() {
             Session
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-            <GetButton title="Okto Log out" apiFn={handleLogout} />
-            <GetButton title="Show Session Info" apiFn={getSessionInfo} />
+            <GetButton title="Okto Log out" apiFn={handleLogout} tag="" />
+            <GetButton
+              title="Show Session Info"
+              apiFn={getSessionInfo}
+              tag=""
+            />
           </div>
         </div>
 
@@ -74,18 +80,49 @@ export default function Homepage() {
           <h2 className="text-violet-900 font-semibold text-2xl mb-6">
             Explorer Functions
           </h2>
-          <p className="font-regular text-lg mb-6">For a complete list of supported networks, check out <a className="underline text-indigo-700" href="https://docs.okto.tech/docs/supported-chains" target="_blank">Supported Chains & Tokens Guide</a>.</p>
+          <p className="font-regular text-lg mb-6">
+            For a complete list of supported networks, check out{" "}
+            <a
+              className="underline text-indigo-700"
+              href="https://docs.okto.tech/docs/supported-chains"
+              target="_blank"
+            >
+              Supported Chains & Tokens Guide
+            </a>
+            .
+          </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-            <GetButton title="getAccount" apiFn={getAccount} />
-            <GetButton title="getChains" apiFn={getChains} />
-            <GetButton title="getOrdersHistory" apiFn={getOrdersHistory} />
-            <GetButton title="getPortfolio" apiFn={getPortfolio} />
+            <GetButton title="getAccount" apiFn={getAccount} tag="" />
+            <GetButton
+              title="getChains"
+              apiFn={getChains}
+              tag="Ensure that chains are whitelisted."
+            />
+            <GetButton
+              title="getOrdersHistory"
+              apiFn={getOrdersHistory}
+              tag=""
+            />
+            <GetButton
+              title="getPortfolio"
+              apiFn={getPortfolio}
+              tag="Ensure token is whitelisted to see the balance."
+            />
             <GetButton
               title="getPortfolioActivity"
               apiFn={getPortfolioActivity}
+              tag=""
             />
-            <GetButton title="getPortfolioNFT" apiFn={getPortfolioNFT} />
-            <GetButton title="getTokens" apiFn={getTokens} />
+            <GetButton
+              title="getPortfolioNFT"
+              apiFn={getPortfolioNFT}
+              tag="Ensure that the NFT is whitelisted"
+            />
+            <GetButton
+              title="getTokens"
+              apiFn={getTokens}
+              tag="Ensure the token is whitelisted"
+            />
           </div>
         </div>
 
