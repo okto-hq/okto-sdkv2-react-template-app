@@ -1,0 +1,11 @@
+apiVersion: v2
+name: okto-sdkv2-react
+description: A Helm chart for okto-sdkv2-react workloads in prod environment
+type: application
+version: 0.1.0
+appVersion: 1.1.0
+dependencies:
+- name: common-okto
+  repository: https://charts.dcxtools.com/apps
+  version: 0.5.8
+  alias: okto-sdkv2-react
