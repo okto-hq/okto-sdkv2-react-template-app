@@ -1,0 +1,80 @@
+version: &imageVersion "13591842069"
+global:
+  version: *imageVersion
+okto-sdkv2-react:
+  environment: production
+  project: okto
+  namespaceOverride: oktohq
+  image:
+    registry: ghcr.io
+    repository: okto-hq/okto-sdkv2-react-template-app
+    pullPolicy: IfNotPresent
+    tag: *imageVersion
+  imagePullSecrets:
+    - name: oktohq-registry
+  deployment:
+    resources:
+      limits:
+        cpu: 700m
+        memory: 700Mi
+      requests:
+        cpu: 500m
+        memory: 500Mi
+    readinessProbe:
+      failureThreshold: 10
+      httpGet:
+        path: /
+        port: 3000
+        scheme: HTTP
+      initialDelaySeconds: 3
+      periodSeconds: 2
+    DDService: okto-sdkv2-react
+    topologySpreadConstraints:
+      - maxSkew: 1
+        topologyKey: node
+        whenUnsatisfiable: ScheduleAnyway
+  service:
+    # serviceName: 
+    ports:
+      - port: 3000
+        portName: http
+        protocol: TCP
+    type: ClusterIP
+  ingress:
+    enabled: true
+    domain: okto.tech
+    exposePort: http
+    scheme: http
+    hosts:
+      - host: react-template-v2.okto.tech
+  autoscaling:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 4
+  envFromSecrets:
+    - variable: VITE_OKTO_CLIENT_SWA
+      secretId: &oktohq-sdkv2-react oktohq/okto-sdkv2-react
+      secretKey: VITE_OKTO_CLIENT_SWA
+    - variable: VITE_OKTO_CLIENT_PRIVATE_KEY
+      secretId: *oktohq-sdkv2-react
+      secretKey: VITE_OKTO_CLIENT_PRIVATE_KEY
+  tolerations:
+    - effect: NoSchedule
+      key: application
+      operator: Equal
+      value: okto
+    - effect: NoSchedule
+      key: arch
+      operator: Equal
+      value: arm64
+  nodeSelector:
+    application: okto
+    arch: arm64
+  securityContext:
+    allowPrivilegeEscalation: false
+    privileged: false
+    runAsGroup: 7777
+    runAsUser: 7777
+  deploymentStrategy:
+    rollingUpdate:
+      maxUnavailable: 50%
