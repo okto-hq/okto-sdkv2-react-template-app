@@ -1,6 +1,13 @@
 "use client";
 import { useState, useEffect, useCallback } from "react";
-import { Address, getOrdersHistory, getPortfolio, getTokens, OktoClient, useOkto, UserPortfolioData } from "@okto_web3/react-sdk";
+import {
+  Address,
+  getOrdersHistory,
+  getPortfolio,
+  getTokens,
+  useOkto,
+  UserPortfolioData,
+} from "@okto_web3/react-sdk";
 import { tokenTransfer } from "@okto_web3/react-sdk/userop";
 import { getChains } from '@okto_web3/react-sdk';
 import { useNavigate } from "react-router-dom";
