@@ -75,6 +75,7 @@ function TwoStepTokenTransfer() {
   const [selectedToken, setSelectedToken] = useState<string>("");
   const [amount, setAmount] = useState<string>("");
   const [recipient, setRecipient] = useState<string>("");
+  const [sponsorshipEnabled, setSponsorshipEnabled] = useState(false);
   const [tokenBalance, setTokenBalance] = useState<{
     balance: string;
     usdtBalance: string;
@@ -235,11 +236,22 @@ function TwoStepTokenTransfer() {
     fetchPortfolio();
   }, [oktoClient, selectedToken]);
 
+  // handle network change
+  const handleNetworkChange = (e: any) => {
+    const selectedCaipId = e.target.value;
+    setSelectedChain(selectedCaipId);
+    setSelectedToken("");
+    setTokenBalance(null);
+
+    const selectedChainObj = chains.find(
+      (chain) => chain.caipId === selectedCaipId
+    );
+    setSponsorshipEnabled(selectedChainObj?.sponsorshipEnabled || false);
+  };
+
   // Function to handle token selection
   const handleTokenSelect = (symbol: string) => {
     setSelectedToken(symbol);
-
-    // Update token balance immediately if we have portfolio data
     if (portfolioBalance) {
       const tokenData = portfolioBalance.find((item) => item.symbol === symbol);
       setTokenBalance(tokenData || null);
@@ -393,12 +405,7 @@ function TwoStepTokenTransfer() {
         <select
           className="w-full p-3 bg-gray-800 border border-gray-700 rounded text-white"
           value={selectedChain}
-          onChange={(e) => {
-            setSelectedChain(e.target.value);
-            setSelectedToken("");
-            setAmount("");
-            setRecipient("");
-          }}
+          onChange={handleNetworkChange}
           disabled={isLoading}
         >
           <option value="" disabled>
@@ -411,6 +418,13 @@ function TwoStepTokenTransfer() {
           ))}
         </select>
       </div>
+      {selectedChain && (
+        <p className="mt-2 text-sm text-gray-300 border border-indigo-700 p-2 my-2">
+          {sponsorshipEnabled
+            ? "Gas sponsorship is available ✅"
+            : "⚠️ Sponsorship is not activated for this chain, the user must hold native tokens to proceed with the transfer. You can get the token from the respective faucets"}
+        </p>
+      )}
 
       {/* Token Selection */}
       <div>

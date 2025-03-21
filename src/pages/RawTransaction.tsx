@@ -63,7 +63,7 @@ function EVMRawTransaction() {
   const [value, setValue] = useState("");
   const [data, setData] = useState("");
   const [accounts, setAccounts] = useState<any[]>([]);
-
+  const [sponsorshipEnabled, setSponsorshipEnabled] = useState(false);
   // UI state
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
@@ -126,6 +126,17 @@ function EVMRawTransaction() {
     );
     setFrom(matchedAccount ? matchedAccount.address : "");
   }, [selectedChain, accounts]);
+
+  // handle network change
+  const handleNetworkChange = (e: any) => {
+    const selectedCaipId = e.target.value;
+    setSelectedChain(selectedCaipId);
+
+    const selectedChainObj = chains.find(
+      (chain) => chain.caipId === selectedCaipId
+    );
+    setSponsorshipEnabled(selectedChainObj?.sponsorshipEnabled || false);
+  };
 
   // Transaction handlers
   const handleGetOrderHistory = async (id?: string) => {
@@ -479,9 +490,7 @@ function EVMRawTransaction() {
             <select
               className="w-full p-3 bg-gray-800 border border-gray-700 rounded text-white"
               value={selectedChain}
-              onChange={(e) => {
-                setSelectedChain(e.target.value);
-              }}
+              onChange={handleNetworkChange}
               disabled={isLoading}
             >
               <option value="" disabled>
@@ -494,6 +503,13 @@ function EVMRawTransaction() {
               ))}
             </select>
           </div>
+          {selectedChain && (
+            <p className="mt-2 text-sm text-gray-300 border border-indigo-700 p-2 my-2">
+              {sponsorshipEnabled
+                ? "Gas sponsorship is available ✅"
+                : "⚠️ Sponsorship is not activated for this chain, the user must hold native tokens to proceed with the transfer. You can get the token from the respective faucets"}
+            </p>
+          )}
 
           {/* Sender Address Input */}
           <div className="w-full my-2">
@@ -506,6 +522,10 @@ function EVMRawTransaction() {
               onChange={(e) => setFrom(e.target.value)}
               placeholder="Enter Sender Address"
             />
+            <p className="mt-2 text-sm text-gray-300 border border-indigo-700 p-2 my-2">
+              ⬆️ This is the embedded wallet address associated with the
+              currently signed-in user.
+            </p>
           </div>
 
           {/* Recipient Address Input */}

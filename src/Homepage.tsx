@@ -11,6 +11,7 @@ import {
 import { googleLogout } from "@react-oauth/google";
 import { useNavigate } from "react-router-dom";
 import GetButton from "./components/GetButton";
+import SignComponent from "./components/SignComponent";
 
 export default function Homepage() {
   const oktoClient = useOkto();
@@ -124,6 +125,10 @@ export default function Homepage() {
               tag="Ensure the token is whitelisted"
             />
           </div>
+        </div>
+
+        <div className="bg-white rounded-xl shadow-lg border border-violet-200 p-6">
+          <SignComponent />
         </div>
 
         <div className="bg-white rounded-xl shadow-lg border border-violet-200 p-6">
