@@ -19,7 +19,6 @@ LABEL MAINTAINER Nishith Kulshrestha <nishith.kulshrestha@coindcx.com>
 
 COPY --from=build /usr/bin/dumb-init /usr/bin/dumb-init
 
-COPY --from=build /app/build /home/dcx/app/build
 
 # Non-Root user
 RUN addgroup -g 7777 dcx &&\
@@ -31,6 +30,7 @@ WORKDIR /home/dcx/app
 
 # setup project structure
 #COPY --chown=dcx:dcx --from=build /app/.next ./.next
+COPY --from=build /app/dist /home/dcx/app/dist
 COPY --chown=dcx:dcx . .
 COPY --chown=dcx:dcx --from=build /app/package-lock.json ./package-lock.json
 
