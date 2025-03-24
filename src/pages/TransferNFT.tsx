@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { nftTransfer as nftTransferUserOp } from "@okto_web3/react-sdk/userop";
 import { nftTransfer as nftTransferMain } from "@okto_web3/react-sdk";
 import CopyButton from "../components/CopyButton";
+import ViewExplorerURL from "../components/ViewExplorerURL";
 
 // Modal Component
 interface ModalProps {
@@ -65,7 +66,7 @@ function TransferNFT() {
   const [amount, setAmount] = useState<string>("1");
   const [type, setType] = useState<string>("ERC721");
   const [balance, setBalance] = useState<string>("");
-
+  const [sponsorshipEnabled, setSponsorshipEnabled] = useState(false);
   // Modal and transaction states
   const [activeModal, setActiveModal] = useState<string | null>(null);
   const [jobId, setJobId] = useState<string | null>(null);
@@ -159,6 +160,16 @@ function TransferNFT() {
     fetchNfts();
   }, [selectedChain, oktoClient]);
 
+  // handle network change
+  const handleNetworkChange = (e: any) => {
+    const selectedCaipId = e.target.value;
+    setSelectedChain(selectedCaipId);
+
+    const selectedChainObj = chains.find(
+      (chain) => chain.caipId === selectedCaipId
+    );
+    setSponsorshipEnabled(selectedChainObj?.sponsorshipEnabled || false);
+  };
   // Validation function
   const validateFormData = (): {
     caip2Id: string;
@@ -457,19 +468,6 @@ function TransferNFT() {
         <div className="space-y-4 text-white">
           <div className="flex justify-between items-center">
             <p>Transaction Details:</p>
-            <button
-              onClick={refreshOrderHistory}
-              className="flex items-center gap-1 text-blue-400 hover:text-blue-300 px-2 py-1 rounded bg-blue-900/30 hover:bg-blue-900/50 transition-colors"
-              disabled={isRefreshing}
-            >
-              {isRefreshing ? (
-                <span>Refreshing...</span>
-              ) : (
-                <>
-                  <RefreshIcon /> Refresh
-                </>
-              )}
-            </button>
           </div>
 
           {/* Order History Details */}
@@ -503,14 +501,14 @@ function TransferNFT() {
               {orderHistory.status === "SUCCESSFUL" ? (
                 <div className="flex justify-center pt-2">
                   {orderHistory.downstreamTransactionHash?.[0] && (
-                    <a
-                      href={`https://sepolia.basescan.org/tx/${orderHistory.downstreamTransactionHash[0]}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="p-3 bg-blue-600 hover:bg-blue-700 text-white rounded transition-colors w-full text-center"
-                    >
-                      View in Explorer
-                    </a>
+                    <>
+                      <ViewExplorerURL orderHistory={orderHistory} />
+                      <p>
+                        If you are unable to see the View Explorer button. You
+                        can go to the respective explorer and check the Internal
+                        Transaction for your account.
+                      </p>
+                    </>
                   )}
                 </div>
               ) : (
@@ -559,6 +557,19 @@ function TransferNFT() {
       </button>
 
       <h1 className="text-white font-bold text-3xl mb-8">Transfer NFT</h1>
+      <p className="text-white font-regular text-lg mb-6">
+        For a detailed overview of Transfer NFT intent, refer to our
+        documentation on{" "}
+        <a
+          className="underline text-indigo-300"
+          href="https://docs.okto.tech/docs/react-sdk/nftTransfer"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          NFT Transfer
+        </a>
+        .
+      </p>
 
       {error && (
         <div className="w-full max-w-2xl bg-red-900/50 border border-red-700 text-red-100 p-3 mb-4 rounded">
@@ -576,14 +587,7 @@ function TransferNFT() {
             <select
               className="w-full p-3 bg-gray-800 border border-gray-700 rounded text-white"
               value={selectedChain}
-              onChange={(e) => {
-                setSelectedChain(e.target.value);
-                setSelectedNFT("");
-                setCollectionAddress("");
-                setNftId("");
-                setType("ERC721");
-                setAmount("1");
-              }}
+              onChange={handleNetworkChange}
               disabled={loadingChains}
             >
               <option value="" disabled>
@@ -596,6 +600,14 @@ function TransferNFT() {
               ))}
             </select>
           </div>
+
+          {selectedChain && (
+            <p className="mt-2 text-sm text-gray-300 border border-indigo-700 p-2 my-2">
+              {sponsorshipEnabled
+                ? "Gas sponsorship is available ✅"
+                : "⚠️ Sponsorship is not activated for this chain, the user must hold native tokens to proceed with the transfer. You can get the token from the respective faucets"}
+            </p>
+          )}
 
           {/* NFT Selection */}
           {selectedChain && (
