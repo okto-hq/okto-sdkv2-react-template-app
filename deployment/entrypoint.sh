@@ -2,5 +2,4 @@
 set -e
 
 # start application
-
-serve dist
+npm run start

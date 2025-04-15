@@ -8,7 +8,8 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "start": "serve dist"
   },
   "dependencies": {
     "@okto_web3/react-sdk": "^0.4.0",
@@ -17,7 +18,8 @@
     "lucide-react": "^0.483.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-router-dom": "^7.1.5"
+    "react-router-dom": "^7.1.5",
+    "serve": "^14.2.4"
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",
