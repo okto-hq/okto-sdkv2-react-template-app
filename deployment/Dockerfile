@@ -37,7 +37,6 @@ COPY --chown=dcx:dcx --from=build /app/package-lock.json ./package-lock.json
 
 RUN npm install -g serve 
 
-
 RUN chmod +x /home/dcx/app/deployment/entrypoint.sh
 
 # only install production dependencies
