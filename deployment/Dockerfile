@@ -40,4 +40,4 @@ RUN chmod +x /home/dcx/app/deployment/entrypoint.sh
 RUN npm ci --only=production
 
 ENTRYPOINT [ "/usr/bin/dumb-init", "--" ]
-CMD [ "entrypoint.sh" ]
+CMD ["npm", "run", "start"]
