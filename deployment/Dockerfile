@@ -11,9 +11,7 @@ RUN npm install
 COPY . .
 
 RUN npm run build
-
-RUN npm install -g serve 
-RUN serve dist 
+ 
 
 FROM node:20-alpine3.17 AS app
 
