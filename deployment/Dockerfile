@@ -7,7 +7,6 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 # COPY source.config.ts ./
 RUN npm install
-RUN npm install -g serve
 COPY . .
 
 RUN npm run build
