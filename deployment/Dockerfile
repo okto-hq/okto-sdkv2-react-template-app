@@ -7,7 +7,7 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 # COPY source.config.ts ./
 RUN npm install
-
+RUN npm install -g serve
 COPY . .
 
 RUN npm run build
@@ -32,8 +32,6 @@ WORKDIR /home/dcx/app
 COPY --from=build /app/dist /home/dcx/app/dist
 COPY --chown=dcx:dcx . .
 COPY --chown=dcx:dcx --from=build /app/package-lock.json ./package-lock.json
-
-RUN npm install -g serve 
 
 RUN chmod +x /home/dcx/app/deployment/entrypoint.sh
 
