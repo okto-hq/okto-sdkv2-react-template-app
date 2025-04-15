@@ -1,4 +1,4 @@
-version: &imageVersion "14469254587"
+version: &imageVersion "14469260719"
 global:
   version: *imageVersion
 okto-sdkv2-react:
