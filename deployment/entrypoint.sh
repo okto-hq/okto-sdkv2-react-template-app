@@ -2,4 +2,4 @@
 set -e
 
 # start application
-npm run start
+npm run dev
