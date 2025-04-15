@@ -5,13 +5,15 @@ RUN apk add --update --no-cache dumb-init
 
 WORKDIR /app
 COPY package.json package-lock.json ./
-
 # COPY source.config.ts ./
 RUN npm install
 
 COPY . .
 
 RUN npm run build
+
+RUN npm install -g serve 
+RUN serve dist 
 
 FROM node:20-alpine3.17 AS app
 
