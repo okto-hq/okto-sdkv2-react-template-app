@@ -5,7 +5,6 @@ RUN apk add --update --no-cache dumb-init
 
 WORKDIR /app
 COPY package.json package-lock.json ./
-
 # COPY source.config.ts ./
 RUN npm install
 
