@@ -2,4 +2,5 @@
 set -e
 
 # start application
-npm run start
+
+serve dist
