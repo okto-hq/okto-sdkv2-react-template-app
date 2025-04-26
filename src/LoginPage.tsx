@@ -23,7 +23,7 @@ export default function LoginPage() {
     // If not authenticated with Okto, check for stored Google token
     const storedToken = localStorage.getItem("googleIdToken");
     if (storedToken) {
-      console.log("storedToken", storedToken);
+      console.log("storedToken detected");
       handleAuthenticate(storedToken);
     }
   }, [oktoClient.isLoggedIn()]);

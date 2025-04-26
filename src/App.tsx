@@ -13,8 +13,6 @@ function App() {
 
   //check if user is already logged in
   const isloggedIn = oktoClient.isLoggedIn();
-  console.log(isloggedIn);
-  console.log(oktoClient);
 
   return (
     <>
