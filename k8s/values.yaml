@@ -61,6 +61,9 @@ okto-sdkv2-react:
     - variable: VITE_OKTO_ENVIRONMENT
       secretId: *oktohq-sdkv2-react
       secretKey: VITE_OKTO_ENVIRONMENT
+    - variable: VITE_GOOGLE_CLIENT_ID
+      secretId: *oktohq-sdkv2-react
+      secretKey: VITE_GOOGLE_CLIENT_ID
   tolerations:
     - effect: NoSchedule
       key: application
