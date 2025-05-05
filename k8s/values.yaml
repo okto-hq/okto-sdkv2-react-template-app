@@ -58,6 +58,9 @@ okto-sdkv2-react:
     - variable: VITE_OKTO_CLIENT_PRIVATE_KEY
       secretId: *oktohq-sdkv2-react
       secretKey: VITE_OKTO_CLIENT_PRIVATE_KEY
+    - variable: VITE_OKTO_ENVIRONMENT
+      secretId: *oktohq-sdkv2-react
+      secretKey: VITE_OKTO_ENVIRONMENT
   tolerations:
     - effect: NoSchedule
       key: application
