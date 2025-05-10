@@ -26,7 +26,9 @@ USER dcx
 RUN mkdir -p /home/dcx/app
 WORKDIR /home/dcx/app
 
+
 # setup project structure
+
 #COPY --chown=dcx:dcx --from=build /app/.next ./.next
 COPY --from=build /app/dist /home/dcx/app/dist
 COPY --chown=dcx:dcx . .
