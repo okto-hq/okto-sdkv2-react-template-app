@@ -32,6 +32,12 @@ COPY --from=build /app/dist /home/dcx/app/dist
 COPY --chown=dcx:dcx . .
 COPY --chown=dcx:dcx --from=build /app/package-lock.json ./package-lock.json
 
+# Environment variables (placeholders; real values injected at runtime via secrets)
+ENV VITE_OKTO_CLIENT_SWA= \
+    VITE_OKTO_CLIENT_PRIVATE_KEY= \
+    VITE_OKTO_ENVIRONMENT= \
+    VITE_GOOGLE_CLIENT_ID= 
+
 RUN chmod +x /home/dcx/app/deployment/entrypoint.sh
 
 # only install production dependencies
