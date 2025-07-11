@@ -72,6 +72,7 @@ function TwoStepTokenTransfer() {
   const { config } = useContext(ConfigContext);
 
   // Form state
+  const [mode, setMode] = useState<"EVM" | "APTOS" | "SOLANA">("EVM");
   const [chains, setChains] = useState<any[]>([]);
   const [tokens, setTokens] = useState<TokenOption[]>([]);
   const [portfolio, setPortfolio] = useState<UserPortfolioData>();
@@ -132,9 +133,13 @@ function TwoStepTokenTransfer() {
     if (!token) throw new Error("Please select a valid token");
     if (!amount || isNaN(Number(amount)) || Number(amount) <= 0)
       throw new Error("Please enter a valid amount");
-    if (!recipient || !recipient.startsWith("0x"))
-      throw new Error("Please enter a valid recipient address");
 
+    if (!recipient) throw new Error("Please enter a valid recipient address");
+
+    if (mode === "EVM") {
+      if (!recipient.startsWith("0x"))
+        throw new Error("Please enter a valid recipient address");
+    }
     return {
       amount: BigInt(amount),
       recipient: recipient as Address,
@@ -558,6 +563,25 @@ function TwoStepTokenTransfer() {
   // Render form fields
   const renderForm = () => (
     <div className="space-y-4 bg-black  p-6 rounded-lg shadow-xl border border-gray-800">
+      {/* Chain Type */}
+      <div>
+        <label className="block text-sm font-medium text-gray-300 mb-1">
+          Select Chain Type
+        </label>
+        <select
+          className="w-full p-3 bg-gray-700 border border-gray-600 rounded text-white"
+          value={mode}
+          onChange={(e) =>
+            setMode(e.target.value as "EVM" | "APTOS" | "SOLANA")
+          }
+          disabled={isLoading}
+        >
+          <option value="EVM">EVM</option>
+          <option value="APTOS">APTOS</option>
+          <option value="SOLANA">SOLANA</option>
+        </select>
+      </div>
+
       {/* Network Selection */}
       <div>
         <label className="block text-sm font-medium text-gray-300 mb-1">
@@ -696,7 +720,7 @@ function TwoStepTokenTransfer() {
           className="w-full p-3 bg-gray-800 border border-gray-700 rounded text-white"
           value={recipient}
           onChange={(e) => setRecipient(e.target.value)}
-          placeholder="0x..."
+          placeholder="Valid recipient address for selected network"
           disabled={isLoading}
         />
       </div>

@@ -38,8 +38,11 @@ export default function GoogleLoginComponent() {
             clientPK,
             clientSWA
           );
-          if(res.status == "success"){
-            localStorage.setItem("okto_session", JSON.stringify(res.sessionConfig));
+          if (res.status == "success") {
+            localStorage.setItem(
+              "okto_session",
+              JSON.stringify(res.sessionConfig)
+            );
           }
         } else if (mode === "sdk") {
           await oktoClient.loginUsingOAuth(
@@ -70,4 +73,4 @@ export default function GoogleLoginComponent() {
       />
     </div>
   );
-};
+}

@@ -424,7 +424,7 @@ function TransferNFT() {
   };
 
   const handleNftTransferEstimate = async () => {
-    if(config.mode === "sdk" ) return;
+    if (config.mode === "sdk") return;
     setIsLoading(true);
     setError(null);
     try {

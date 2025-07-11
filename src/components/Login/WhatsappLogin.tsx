@@ -86,7 +86,7 @@ export default function WhatsappLogin() {
         clientPK,
         clientSWA
       );
-      if(res.status == "success"){
+      if (res.status == "success") {
         localStorage.setItem("okto_session", JSON.stringify(res.sessionConfig));
       }
     } else if (mode === "sdk") {

@@ -491,7 +491,7 @@ function EVMRawTransaction() {
   // Estimate + Execute (API mode only)
   const handleRawTransactionEstimate = async () => {
     if (config.mode == "sdk") return;
-    
+
     if (mode === "EVM") {
       setIsLoading(true);
       setError(null);
